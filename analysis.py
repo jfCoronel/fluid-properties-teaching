@@ -92,6 +92,8 @@ out['cycle']={'pe_kPa':pe/1e3,'pc_kPa':pc/1e3,'h1':h1/1e3,'s1':s1/1e3,'h2s':h2s/
   'T2_student42_s':P('S','P',pc,'T',315.15,f)/1e3,'h2_student':P('H','P',pc,'T',315.15,f)/1e3,
   'h4_student':P('H','T',Te,'Q',0.2,f)/1e3,'x4':P('Q','P',pe,'H',h4,f)}
 out['cycle']['eta_student']=(h2s-h1)/(out['cycle']['h2_student']*1e3-h1)
+# scale for the mean enthalpy error of the water table: latent heat at 1 MPa
+out['steam']['hfg_1MPa']=(P('H','P',1e6,'Q',1,'Water')-P('H','P',1e6,'Q',0,'Water'))/1e3
 out['worked']={'blocks':pasos,'p_MPa':pc/1e6,'s1':s1/1e3,'h2s_tab':h2s_tab/1e3,'h2s_eos':h2s/1e3,'T2s':P('T','P',pc,'S',s1,f)-273.15}
 json.dump(out,open('analysis.json','w'),indent=1,default=float)
 print(json.dumps(out,indent=1,default=float))
