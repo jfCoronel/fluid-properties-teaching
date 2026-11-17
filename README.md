@@ -2,7 +2,7 @@
 
 Scripts and examples accompanying the article
 
-> Coronel, J.F., Pérez-Lombard, L., Velázquez Alonso, D. *From steam tables to the browser: fluid-property evaluation in engineering education.* Submitted to *Education for Chemical Engineers*.
+> Coronel, J.F., Pérez-Lombard, L., Velázquez Alonso, D., González Falcón, R. *From steam tables to the browser: fluid-property evaluation in engineering education.* Submitted to *Education for Chemical Engineers*.
 
 ## What is here
 
