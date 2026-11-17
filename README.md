@@ -8,9 +8,9 @@ Scripts and examples accompanying the article
 
 | Path | Content |
 |---|---|
-| `analysis.py` | Emulates the manual methods with [CoolProp](http://www.coolprop.org) 6.4.1: double linear interpolation in superheated-vapour tables of water and R-134a built on textbook-like grids (4000 random states per fluid), and a standard R-134a vapour-compression cycle solved with the equation of state, by table interpolation and with simulated chart-reading errors (Monte Carlo, 20 000 readings). |
+| `analysis.py` | Emulates the manual methods with [CoolProp](http://www.coolprop.org) 6.4.1: double linear interpolation in superheated-vapour tables of water and R-134a built on textbook-like grids (4000 random states per fluid), and a standard R-134a vapour-compression cycle solved with the equation of state, by table interpolation (the worked example of Table 2) and with simulated chart-reading errors (Monte Carlo, 20 000 readings). |
 | `figs.py` | Draws Figures 1–3 of the article (PNG, TIFF and PDF). |
-| `reference_states.py` | Computes Table 2 of the article: enthalpy and entropy of the same states under the IAPWS, IIR, ASHRAE and normal-boiling-point reference states. |
+| `reference_states.py` | Computes Table 3 of the article: enthalpy and entropy of the same states under the IAPWS, IIR, ASHRAE and normal-boiling-point reference states. |
 | `results/analysis.json` | The results reported in the article, for comparison. |
 | `examples/` | The three [fProperties](https://fproperties.jfcoronel.org) problems shown in the article, in the fProperties problem format. |
 

@@ -3,7 +3,8 @@
 Study A: double linear interpolation in superheated-vapour tables built on
 textbook-like grids (water and R-134a), compared with the equation of state.
 Study B: a standard R-134a vapour-compression cycle solved with the equation of
-state, by table interpolation, and with Monte Carlo chart-reading errors.
+state, by table interpolation, and with Monte Carlo chart-reading errors. The
+steps of the table interpolation are stored under 'worked' (Table 2).
 
 Writes analysis.json and the intermediate *.npy files to the current folder.
 The random seed is fixed, so the results are reproducible.
@@ -65,14 +66,18 @@ h1=P('H','T',Te,'Q',1,f); s1=P('S','T',Te,'Q',1,f)
 h2s=P('H','P',pc,'S',s1,f); h2=h1+(h2s-h1)/eta; h3=P('H','T',Tc,'Q',0,f); h4=h3
 cop=(h1-h4)/(h2-h1); T2=P('T','P',pc,'H',h2,f)-273.15
 # table route: superheated table at 1.0 and 1.2 MPa, interpolate in s then in p
-def h_at_ps(p,s,pg,tg):
+def h_at_ps(p,s,pg,tg,pasos=None):
+    # pasos, if given, collects the rows read and each interpolation (Table 2 of the article)
     i=np.searchsorted(pg,p/1e6)-1; hs=[]
     for pp in (pg[i],pg[i+1]):
         T=np.array([t+273.15 for t in tg if t+273.15>P('T','P',pp*1e6,'Q',1,f)])
         S=np.array([P('S','P',pp*1e6,'Q',1,f)]+[P('S','P',pp*1e6,'T',t,f) for t in T]); H=np.array([P('H','P',pp*1e6,'Q',1,f)]+[P('H','P',pp*1e6,'T',t,f) for t in T])
         k=np.searchsorted(S,s)-1; hs.append(H[k]+(s-S[k])*(H[k+1]-H[k])/(S[k+1]-S[k]))
+        if pasos is not None:
+            Tfila=lambda j: 'sat' if j==0 else T[j-1]-273.15
+            pasos.append({'p_MPa':pp,'rows':[[Tfila(j),S[j]/1e3,H[j]/1e3] for j in (k,k+1)],'h':hs[-1]/1e3})
     return hs[0]+(p/1e6-pg[i])*(hs[1]-hs[0])/(pg[i+1]-pg[i])
-h2s_tab=h_at_ps(pc,s1,r134_p,r134_t); h2_tab=h1+(h2s_tab-h1)/eta; cop_tab=(h1-h4)/(h2_tab-h1)
+pasos=[]; h2s_tab=h_at_ps(pc,s1,r134_p,r134_t,pasos); h2_tab=h1+(h2s_tab-h1)/eta; cop_tab=(h1-h4)/(h2_tab-h1)
 # chart reading Monte Carlo: each student reads h1,h3 and h2s (along isentrope) with sigma
 N=20000
 res_mc={}
@@ -87,5 +92,6 @@ out['cycle']={'pe_kPa':pe/1e3,'pc_kPa':pc/1e3,'h1':h1/1e3,'s1':s1/1e3,'h2s':h2s/
   'T2_student42_s':P('S','P',pc,'T',315.15,f)/1e3,'h2_student':P('H','P',pc,'T',315.15,f)/1e3,
   'h4_student':P('H','T',Te,'Q',0.2,f)/1e3,'x4':P('Q','P',pe,'H',h4,f)}
 out['cycle']['eta_student']=(h2s-h1)/(out['cycle']['h2_student']*1e3-h1)
+out['worked']={'blocks':pasos,'p_MPa':pc/1e6,'s1':s1/1e3,'h2s_tab':h2s_tab/1e3,'h2s_eos':h2s/1e3,'T2s':P('T','P',pc,'S',s1,f)-273.15}
 json.dump(out,open('analysis.json','w'),indent=1,default=float)
 print(json.dumps(out,indent=1,default=float))

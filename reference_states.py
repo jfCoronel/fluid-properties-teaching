@@ -1,4 +1,4 @@
-"""Table 2 of the article: h and s of the same states under different reference states.
+"""Table 3 of the article: h and s of the same states under different reference states.
 
 CoolProp 6.4.1 gives water with the IAPWS convention (u = 0, s = 0 for saturated
 liquid at the triple point). The other conventions are obtained by shifting h
